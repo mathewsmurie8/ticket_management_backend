@@ -1,16 +1,14 @@
 import os
 import sys
 import dj_database_url
+from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-w6mue7s6%sc)59ttqts5#_1&3_9(*quno5v=k3ixx30zjxj9a4'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
@@ -91,11 +89,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'crud.config.wsgi.application'
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1',]
-
 
 
 # Password validation
