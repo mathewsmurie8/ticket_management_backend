@@ -1,4 +1,6 @@
 import os
+import sys
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -10,18 +12,37 @@ SECRET_KEY = 'django-insecure-w6mue7s6%sc)59ttqts5#_1&3_9(*quno5v=k3ixx30zjxj9a4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://localhost:3000', '127.0.0.1']
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'crud',
-        'USER': 'postgres',
-        'PASSWORD': 'admin@123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+
+WSGI_APPLICATION = 'crud.config.wsgi.application'
+
+if DEVELOPMENT_MODE is True:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.path.join(BASE_DIR, "crud.postgresql"),
+        }
     }
-}
+elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+    if os.getenv("DATABASE_URL", None) is None:
+        raise Exception("DATABASE_URL environment variable not defined")
+    DATABASES = {
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+    }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'crud',
+#         'USER': 'postgres',
+#         'PASSWORD': 'admin@123',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 # Application definition
 
@@ -32,7 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tickets',
+    'crud.tickets',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -53,7 +74,7 @@ CORS_ORIGIN_ALLOW_ALL = True  # This will allow all origins
 
 CORS_ALLOWED_ORIGINS = ['http://*', 'https://*']
 
-ROOT_URLCONF = 'crud.urls'
+ROOT_URLCONF = 'crud.config.urls'
 
 TEMPLATES = [
     {
@@ -71,21 +92,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'crud.wsgi.application'
+WSGI_APPLICATION = 'crud.config.wsgi.application'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1',]
 
-
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 
 # Password validation

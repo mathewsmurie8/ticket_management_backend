@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path
-from tickets.views import TicketList, TicketDetail, LoginView, RegisterView, UsersView, DashboardView
+from crud.tickets.views import TicketList, TicketDetail, LoginView, RegisterView, UsersView, DashboardView
 
 urlpatterns = [
     path('admin/', admin.site.urls),

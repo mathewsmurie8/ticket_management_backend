@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from tickets.models import Ticket
+from crud.tickets.models import Ticket
 from django.contrib.auth.models import User
 
 
