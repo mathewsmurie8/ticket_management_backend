@@ -1,0 +1,18 @@
+# set up the database 
+
+sudo su postgres
+psql
+CREATE DATABASE crud OWNER postgres;
+GRANT ALL PRIVILEGES ON DATABASE crud TO postgres;
+ALTER USER postgres PASSWORD 'admin@123';
+\q
+exit
+
+# create virtual environment and run the backend server
+mkvirtualenv crud-backend
+pip install -r requirements.txt
+python manage.py migrate
+./manage.py runserver
+
+# create superuser for admin login
+python manage.py createsuperuser
