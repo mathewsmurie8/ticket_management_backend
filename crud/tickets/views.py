@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 import json
+from django.contrib.auth.models import User, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.http import Http404
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -72,8 +73,12 @@ class RegisterView(generics.ListCreateAPIView):
         username = request.data.get('username')
         password = request.data.get('password')
         user, _ = User.objects.get_or_create(
-            username=username, email=email, first_name=first_name, last_name=last_name)
+            username=username, email=email, first_name=first_name, last_name=last_name, is_staff=True)
         user.set_password(password)
+        content_type = ContentType.objects.get_for_model(Ticket)
+        permissions = Permission.objects.filter(content_type=content_type)
+        for permission in permissions:
+            user.user_permissions.add(permission)
         user.save()
         token, _ = Token.objects.get_or_create(user=user)
         return Response({'token': token.key, 'username': user.username, 'userid': user.id}, status=status.HTTP_201_CREATED)
