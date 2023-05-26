@@ -2,16 +2,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
+class TicketStatus(models.TextChoices):
+    OPEN = 'Open'
+    RESOLVED = 'resolved'
+
+
+
+class TicketType(models.TextChoices):
+    INQUIRY = 'inquiry'
+    PRODUCT_SUPPORT = 'product support'
+    COMPLAINT = 'complaint'
+
+
 class Ticket(models.Model):
-    class TicketStatus(models.TextChoices):
-        OPEN = 'Open'
-        RESOLVED = 'resolved'
-
-    class TicketType(models.TextChoices):
-        INQUIRY = 'inquiry'
-        PRODUCT_SUPPORT = 'product support'
-        COMPLAINT = 'complaint'
-
     # the user who created the ticket
     user =  models.ForeignKey(User, on_delete=models.CASCADE)
     # the assigned user
