@@ -65,7 +65,7 @@ class TicketDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class RegisterView(generics.ListCreateAPIView):
+class RegisterView(generics.ListCreateAPIView): #todo: Add error handling
     def post(self, request):
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
