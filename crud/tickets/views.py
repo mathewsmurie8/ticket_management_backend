@@ -51,7 +51,7 @@ class TicketDetail(APIView):
         serializer = TicketSerializer(ticket)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
+    def put(self, request, pk, format=None): #todo: Add error handling
         ticket = self.get_object(pk)
         serializer = TicketSerializer(ticket, data=request.data)
         if serializer.is_valid():
